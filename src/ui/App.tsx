@@ -26,24 +26,26 @@ export const api = async <T,>(path: string, init?: RequestInit): Promise<T> => {
 }
 
 export default function App() {
-  if (window.location.pathname.startsWith('/public/')) return <PublicFunnel slug={window.location.pathname.split('/')[2] ?? ''} />
+  if (window.location.pathname.startsWith('/public/')) {
+    return <PublicFunnel slug={window.location.pathname.split('/')[2] ?? ''} />
+  }
 
   const isBackOfficeRoute = window.location.pathname === '/admin' || window.location.search.includes('view=admin')
   const isLoginRoute = window.location.pathname === '/login'
 
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return sessionStorage.getItem('buildicy_logged_in') === 'true' || (!isLoginRoute && Boolean(sessionStorage.getItem('buildicy_demo_role')))
+    return sessionStorage.getItem('buildicy_logged_in') === 'true'
   })
 
-  const [demoRole, setDemoRole] = useState<'client' | 'admin'>(() => {
+  const [currentRole, setCurrentRole] = useState<'client' | 'admin'>(() => {
+    const stored = sessionStorage.getItem('buildicy_role') as 'client' | 'admin' | null
+    if (stored) return stored
     if (isBackOfficeRoute) return 'admin'
-    return (sessionStorage.getItem('buildicy_demo_role') as 'client' | 'admin') || 'client'
+    return 'client'
   })
 
-  const switchRole = (role: 'client' | 'admin') => {
-    setDemoRole(role)
-    sessionStorage.setItem('buildicy_demo_role', role)
-    sessionStorage.setItem('buildicy_logged_in', 'true')
+  const handleLoginSuccess = (role: 'admin' | 'client') => {
+    setCurrentRole(role)
     setIsLoggedIn(true)
     if (role === 'admin') {
       window.history.replaceState(null, '', '/admin')
@@ -52,27 +54,26 @@ export default function App() {
     }
   }
 
-  const signOut = () => {
+  const handleSignOut = () => {
     sessionStorage.removeItem('buildicy_logged_in')
-    sessionStorage.removeItem('buildicy_demo_role')
+    sessionStorage.removeItem('buildicy_role')
+    sessionStorage.removeItem('buildicy_user_email')
+    sessionStorage.removeItem('buildicy_access_token')
+    sessionStorage.removeItem('buildicy_refresh_token')
+    sessionStorage.removeItem('buildicy_workspace_id')
     setIsLoggedIn(false)
     window.history.replaceState(null, '', '/login')
   }
 
-  if (!isLoggedIn || window.location.pathname === '/login') {
-    return (
-      <LoginPage
-        onLoginAsAdmin={() => switchRole('admin')}
-        onLoginAsClient={() => switchRole('client')}
-      />
-    )
+  if (!isLoggedIn || isLoginRoute) {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} />
   }
 
-  if (demoRole === 'admin') {
-    return <BackOfficeView onSwitchToClient={() => switchRole('client')} onSignOut={signOut} />
+  if (currentRole === 'admin') {
+    return <BackOfficeView onSignOut={handleSignOut} />
   }
 
-  return <ClientPortal onSwitchToAdmin={() => switchRole('admin')} onSignOut={signOut} />
+  return <ClientPortal onSignOut={handleSignOut} />
 }
 
 function PublicFunnel({ slug }: { slug: string }) {

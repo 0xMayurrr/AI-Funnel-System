@@ -29,10 +29,8 @@ type FunnelItem = {
 }
 
 export function ClientPortal({
-  onSwitchToAdmin,
   onSignOut
 }: {
-  onSwitchToAdmin: () => void
   onSignOut: () => void
 }) {
   const [activeTab, setActiveTab] = useState<'overview' | 'workflow' | 'leads' | 'funnels'>('overview')
@@ -204,19 +202,66 @@ export function ClientPortal({
 
   return (
     <div className="client-app-shell">
-      {/* Top Demo Role Switcher Bar */}
-      <div className="demo-role-switcher-bar">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className="live-pulse-dot" />
-          <span>Client Portal: <strong>Prestige Luxury Realty</strong> (Done-For-You Funnels & AI Qualified Leads)</span>
+      {/* Client Portal Top Bar */}
+      <header className="portal-top-bar" style={{
+        background: '#ffffff',
+        borderBottom: '1px solid #f1f5f9',
+        padding: '14px 28px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+            color: '#fff',
+            borderRadius: '10px',
+            width: '36px',
+            height: '36px',
+            display: 'grid',
+            placeItems: 'center',
+            fontWeight: 800,
+            fontSize: '17px',
+            boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)'
+          }}>
+            P
+          </div>
+          <div>
+            <div style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.01em' }}>
+              Prestige Luxury Realty
+            </div>
+            <div style={{ fontSize: '11px', color: '#64748b' }}>
+              Client Spectator Dashboard · AI Lead Concierge & WhatsApp Automation
+            </div>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button type="button" className="role-switch-btn active">Client Portal</button>
-          <button type="button" className="role-switch-btn" onClick={onSwitchToAdmin}>
-            Switch to Agency Back Office ➔
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: '#eff6ff',
+            border: '1px solid #bfdbfe',
+            padding: '6px 14px',
+            borderRadius: '24px'
+          }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#2563eb' }} />
+            <span style={{ fontSize: '12px', color: '#1e40af', fontWeight: 600 }}>client@prestigerealty.com</span>
+            <span style={{ fontSize: '10px', background: '#bfdbfe', color: '#1d4ed8', padding: '1px 7px', borderRadius: '12px', fontWeight: 700 }}>CLIENT BROKER</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={onSignOut}
+            className="secondary-button"
+            style={{ fontSize: '12px', padding: '7px 16px', borderRadius: '8px' }}
+          >
+            Sign out
           </button>
         </div>
-      </div>
+      </header>
 
       <div className="client-body-layout">
         {/* Modern Sidebar (Reference Image 1) */}

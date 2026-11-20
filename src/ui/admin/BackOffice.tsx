@@ -48,10 +48,8 @@ type KnowledgeDoc = {
 }
 
 export function BackOffice({
-  onSwitchToClient,
   onSignOut
 }: {
-  onSwitchToClient: () => void
   onSignOut: () => void
 }) {
   const qc = useQueryClient()
@@ -165,19 +163,66 @@ export function BackOffice({
 
   return (
     <div className="admin-shell">
-      {/* Top Demo Switcher Bar */}
-      <div className="demo-role-switcher-bar">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span className="live-pulse-dot" style={{ backgroundColor: '#a855f7' }} />
-          <span>Agency Back Office: <strong>Buildicy SuperAdmin</strong> (DFY Workspaces, Funnels & AI Brain)</span>
+      {/* Back Office Top Bar */}
+      <header className="portal-top-bar" style={{
+        background: '#ffffff',
+        borderBottom: '1px solid #f1f5f9',
+        padding: '14px 28px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            background: 'linear-gradient(135deg, #9333ea, #7e22ce)',
+            color: '#fff',
+            borderRadius: '10px',
+            width: '36px',
+            height: '36px',
+            display: 'grid',
+            placeItems: 'center',
+            fontWeight: 800,
+            fontSize: '17px',
+            boxShadow: '0 4px 12px rgba(147, 51, 234, 0.25)'
+          }}>
+            B
+          </div>
+          <div>
+            <div style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.01em' }}>
+              Buildicy Back Office
+            </div>
+            <div style={{ fontSize: '11px', color: '#64748b' }}>
+              Agency Command Center · Workspace & DFY Funnel Management
+            </div>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button type="button" className="role-switch-btn active">Agency Back Office</button>
-          <button type="button" className="role-switch-btn" onClick={onSwitchToClient}>
-            Switch to Client Portal ➔
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: '#faf5ff',
+            border: '1px solid #e9d5ff',
+            padding: '6px 14px',
+            borderRadius: '24px'
+          }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#9333ea' }} />
+            <span style={{ fontSize: '12px', color: '#6b21a8', fontWeight: 600 }}>admin@buildicy.com</span>
+            <span style={{ fontSize: '10px', background: '#e9d5ff', color: '#7e22ce', padding: '1px 7px', borderRadius: '12px', fontWeight: 700 }}>SUPERADMIN</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={onSignOut}
+            className="secondary-button"
+            style={{ fontSize: '12px', padding: '7px 16px', borderRadius: '8px' }}
+          >
+            Sign out
           </button>
         </div>
-      </div>
+      </header>
 
       <div className="admin-content-container">
         {/* Back Office Top Header */}
