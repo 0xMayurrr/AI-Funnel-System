@@ -1,0 +1,10 @@
+name = "buildicy-api"
+main = "worker/src/cloudflare.ts"
+compatibility_date = "2026-11-20"
+
+[vars]
+APP_ORIGIN = "http://localhost:5173"
+DEMO_MODE = "false"
+
+[triggers]
+crons = ["*/1 * * * *"]

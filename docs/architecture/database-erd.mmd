@@ -1,0 +1,279 @@
+erDiagram
+  PROFILES ||--o{ WORKSPACE_MEMBERSHIPS : joins
+  WORKSPACES ||--o{ WORKSPACE_MEMBERSHIPS : has
+  ROLES ||--o{ WORKSPACE_MEMBERSHIPS : assigned
+  ROLES ||--o{ ROLE_PERMISSIONS : grants
+  PERMISSIONS ||--o{ ROLE_PERMISSIONS : included
+  WORKSPACES ||--o{ WORKSPACE_MODULES : enables
+  MODULE_CATALOG ||--o{ WORKSPACE_MODULES : configured
+  SERVICE_PACKAGES ||--o{ WORKSPACES : assigned
+
+  WORKSPACES ||--o{ FUNNELS : owns
+  FUNNELS ||--o{ FUNNEL_PAGES : contains
+  FUNNELS ||--o{ FORMS : captures_with
+  FORMS ||--o{ FORM_FIELDS : defines
+  FUNNELS ||--o{ FORM_SUBMISSIONS : receives
+  FORMS ||--o{ FORM_SUBMISSIONS : uses
+  WORKSPACES ||--o{ LEADS : owns
+  LEADS ||--o{ FORM_SUBMISSIONS : associated_with
+  LEADS ||--o{ LEAD_ACTIVITIES : records
+  WORKSPACES ||--o{ QUALIFICATION_RULES : configures
+  WORKSPACES ||--o{ SCORING_RULES : configures
+  FORM_SUBMISSIONS ||--o| QUALIFICATION_RESULTS : evaluated_as
+  LEADS ||--o{ QUALIFICATION_RESULTS : summarized_for
+
+  WORKSPACES ||--o{ FOLLOWUP_SEQUENCES : configures
+  FOLLOWUP_SEQUENCES ||--o{ FOLLOWUP_STEPS : contains
+  LEADS ||--o{ WORKFLOW_EXECUTIONS : triggers
+  FOLLOWUP_SEQUENCES ||--o{ WORKFLOW_EXECUTIONS : runs
+  WORKFLOW_EXECUTIONS ||--o{ SCHEDULED_ACTIONS : schedules
+  WORKSPACES ||--o{ BOOKING_CONFIGS : configures
+  LEADS ||--o{ BOOKING_REQUESTS : requests
+  BOOKING_CONFIGS ||--o{ BOOKING_REQUESTS : routes_to
+  BOOKING_REQUESTS ||--o| APPOINTMENTS : confirmed_as
+
+  WORKSPACES ||--o{ INTEGRATION_CONNECTIONS : connects
+  WORKSPACES ||--o{ AI_CONFIGURATIONS : configures
+  AI_CONFIGURATIONS ||--o{ AI_PROMPT_VERSIONS : versions
+  WORKSPACES ||--o{ AI_USAGE_RECORDS : consumes
+  LEADS ||--o{ NOTIFICATIONS : concerns
+  WORKSPACES ||--o{ NOTIFICATIONS : owns
+  WORKSPACES ||--o{ ACTIVITY_LOGS : audits
+  PROFILES ||--o{ ACTIVITY_LOGS : actor
+  WORKSPACES ||--o{ IDEMPOTENCY_KEYS : scopes
+
+  PROFILES {
+    uuid id PK
+    text display_name
+    timestamptz created_at
+  }
+  WORKSPACES {
+    uuid id PK
+    text name
+    text slug UK
+    uuid service_package_id FK
+    text status
+    timestamptz created_at
+  }
+  WORKSPACE_MEMBERSHIPS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid profile_id FK
+    uuid role_id FK
+    text status
+  }
+  ROLES {
+    uuid id PK
+    text code UK
+    boolean platform_role
+  }
+  PERMISSIONS {
+    text code PK
+    text description
+  }
+  ROLE_PERMISSIONS {
+    uuid role_id FK
+    text permission_code FK
+  }
+  SERVICE_PACKAGES {
+    uuid id PK
+    text code UK
+    text name
+    jsonb limits_config
+  }
+  MODULE_CATALOG {
+    text code PK
+    text name
+    text status
+  }
+  WORKSPACE_MODULES {
+    uuid workspace_id FK
+    text module_code FK
+    boolean enabled
+    jsonb config
+  }
+  FUNNELS {
+    uuid id PK
+    uuid workspace_id FK
+    text name
+    text slug
+    text status
+    int published_version
+  }
+  FUNNEL_PAGES {
+    uuid id PK
+    uuid workspace_id FK
+    uuid funnel_id FK
+    jsonb content
+    int version
+  }
+  FORMS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid funnel_id FK
+    text name
+    jsonb settings
+  }
+  FORM_FIELDS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid form_id FK
+    text field_key
+    text field_type
+    jsonb validation
+  }
+  LEADS {
+    uuid id PK
+    uuid workspace_id FK
+    text email_normalized
+    text phone_normalized
+    text status
+    text source
+    jsonb communication_preferences
+    timestamptz created_at
+  }
+  FORM_SUBMISSIONS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid funnel_id FK
+    uuid form_id FK
+    uuid lead_id FK
+    jsonb answers
+    jsonb consent_snapshot
+    timestamptz submitted_at
+  }
+  LEAD_ACTIVITIES {
+    uuid id PK
+    uuid workspace_id FK
+    uuid lead_id FK
+    text activity_type
+    jsonb details
+    timestamptz created_at
+  }
+  QUALIFICATION_RULES {
+    uuid id PK
+    uuid workspace_id FK
+    text version
+    jsonb config
+  }
+  SCORING_RULES {
+    uuid id PK
+    uuid workspace_id FK
+    text version
+    jsonb criteria
+  }
+  QUALIFICATION_RESULTS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid lead_id FK
+    uuid submission_id FK
+    text classification
+    int score
+    jsonb validated_summary
+  }
+  FOLLOWUP_SEQUENCES {
+    uuid id PK
+    uuid workspace_id FK
+    text name
+    text status
+    int version
+  }
+  FOLLOWUP_STEPS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid sequence_id FK
+    int position
+    text action_type
+    jsonb config
+  }
+  WORKFLOW_EXECUTIONS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid lead_id FK
+    uuid sequence_id FK
+    text state
+    text idempotency_key
+  }
+  SCHEDULED_ACTIONS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid execution_id FK
+    timestamptz run_at
+    text state
+    int attempts
+  }
+  BOOKING_CONFIGS {
+    uuid id PK
+    uuid workspace_id FK
+    text provider
+    text booking_url
+  }
+  BOOKING_REQUESTS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid lead_id FK
+    uuid booking_config_id FK
+    text status
+  }
+  APPOINTMENTS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid booking_request_id FK
+    text external_reference
+    timestamptz starts_at
+    text confirmation_source
+  }
+  INTEGRATION_CONNECTIONS {
+    uuid id PK
+    uuid workspace_id FK
+    text provider
+    text status
+    text secret_reference
+  }
+  AI_CONFIGURATIONS {
+    uuid id PK
+    uuid workspace_id FK
+    text provider_code
+    text model_code
+    jsonb policy
+  }
+  AI_PROMPT_VERSIONS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid ai_configuration_id FK
+    text purpose
+    int version
+  }
+  AI_USAGE_RECORDS {
+    uuid id PK
+    uuid workspace_id FK
+    text provider_code
+    text model_code
+    int input_tokens
+    int output_tokens
+    numeric estimated_cost
+    text outcome
+  }
+  NOTIFICATIONS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid lead_id FK
+    text channel
+    text status
+    text idempotency_key
+  }
+  ACTIVITY_LOGS {
+    uuid id PK
+    uuid workspace_id FK
+    uuid actor_profile_id FK
+    text event_type
+    text target_type
+    uuid target_id
+  }
+  IDEMPOTENCY_KEYS {
+    uuid id PK
+    uuid workspace_id FK
+    text key
+    text operation
+    timestamptz expires_at
+  }

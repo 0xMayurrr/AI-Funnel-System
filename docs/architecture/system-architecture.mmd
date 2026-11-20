@@ -1,0 +1,70 @@
+flowchart TB
+  subgraph Actors[Users and entry points]
+    BA[Buildicy administrator]
+    CM[Client workspace member]
+    LP[Public funnel visitor]
+  end
+
+  subgraph Web[Web surfaces]
+    BO[Back Office UI<br/>React + TypeScript]
+    CP[Client Portal UI<br/>React + TypeScript]
+    PF[Public Funnel renderer<br/>React + TypeScript]
+  end
+
+  subgraph Edge[Cloudflare edge deployment]
+    API[Hono REST API<br/>/api/v1]
+    MW[Auth · workspace · permission<br/>module entitlement · rate limits]
+    JOB[Scheduled dispatcher / webhook handlers]
+  end
+
+  subgraph Core[Modular monolith domain core]
+    MOD[Module registry and router]
+    CORE[Shared platform core<br/>workspace · membership · RBAC · audit]
+    FUNNEL[AI Funnel System<br/>funnels · forms · leads · qualification]
+    WF[Workflow runtime<br/>durable state · idempotency · retries]
+    AI[AI core<br/>policy · provider port · validation · usage]
+    INT[Integration and notification ports]
+    ANA[Analytics queries]
+    FUT[Future module seams<br/>Concierge · Growth Engine]
+  end
+
+  subgraph Data[Supabase data plane]
+    AUTH[Supabase Auth]
+    DB[(PostgreSQL<br/>RLS + migrations)]
+  end
+
+  subgraph External[External providers behind adapters]
+    AIP[Configured AI provider]
+    EMAIL[Email delivery provider]
+    BOOK[External booking service]
+    MSG[Future messaging / calendar channels]
+  end
+
+  BA --> BO
+  CM --> CP
+  LP --> PF
+  BO --> API
+  CP --> API
+  PF --> API
+  API --> MW --> MOD
+  JOB --> MOD
+  MOD --> CORE
+  MOD --> FUNNEL
+  MOD --> FUT
+  FUNNEL --> WF
+  FUNNEL --> AI
+  FUNNEL --> INT
+  FUNNEL --> ANA
+  CORE --> AUTH
+  CORE --> DB
+  FUNNEL --> DB
+  WF --> DB
+  AI --> DB
+  INT --> DB
+  ANA --> DB
+  AI --> AIP
+  INT --> EMAIL
+  INT --> BOOK
+  FUT -. later adapters .-> MSG
+  AUTH -. verified session .-> MW
+  MW -. user-scoped queries; RLS defense in depth .-> DB
