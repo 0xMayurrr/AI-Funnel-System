@@ -1,5 +1,9 @@
 import { useState } from 'react'
-import { ShieldCheck, Command, ArrowRight, Building2, UserCheck, Sparkles, Check, KeyRound, AlertCircle, LoaderCircle } from 'lucide-react'
+import {
+  ShieldCheck, Command, ArrowRight, Building2, UserCheck,
+  Sparkles, Check, KeyRound, AlertCircle, LoaderCircle,
+  Zap
+} from 'lucide-react'
 
 export function LoginPage({
   onLoginSuccess
@@ -40,12 +44,12 @@ export function LoginPage({
       if (data.refresh_token) sessionStorage.setItem('buildicy_refresh_token', data.refresh_token)
       if (data.workspace_id) sessionStorage.setItem('buildicy_workspace_id', data.workspace_id)
 
-      setNotice(`Signed in as ${userEmail}. Redirecting to ${role === 'admin' ? 'Agency Back Office' : 'Client Portal'}...`)
+      setNotice(`Authenticated as ${userEmail}. Redirecting to ${role === 'admin' ? 'Agency Back Office' : 'Client Portal'}...`)
       setTimeout(() => {
         onLoginSuccess(role, userEmail)
       }, 400)
     } catch {
-      // Fallback for offline demo if network drop
+      // Fallback for offline demo
       const isAdm = userEmail.toLowerCase().includes('admin')
       const role = isAdm ? 'admin' : 'client'
       sessionStorage.setItem('buildicy_logged_in', 'true')
@@ -73,199 +77,214 @@ export function LoginPage({
   }
 
   return (
-    <div className="auth-shell">
-      <div className="auth-brand-nav">
-        <span className="brand-mark"><Command size={18} strokeWidth={2.5} /></span>
-        <span className="brand-title">buildicy</span>
-      </div>
+    <div className="login-page-wrapper">
+      {/* Top Navigation */}
+      <header className="login-top-nav">
+        <div className="brand-logo-group">
+          <span className="brand-mark-box"><Command size={18} strokeWidth={2.5} /></span>
+          <span className="brand-name-text">buildicy</span>
+          <span className="brand-platform-tag">AI Lead Recovery & Booking Platform</span>
+        </div>
 
-      <div className="login-card-container">
-        <section className="auth-card modern-login" style={{ maxWidth: '520px' }}>
-          <div className="auth-header-pill">
+        <div className="top-nav-status">
+          <span className="status-indicator-dot" />
+          <span>Meta Cloud API & CRM Layer: <strong>Operational</strong></span>
+        </div>
+      </header>
+
+      {/* Main Container */}
+      <main className="login-main-layout">
+        {/* Left Column: Platform Overview & Value Showcase */}
+        <section className="login-showcase-column">
+          <div className="showcase-badge">
             <Sparkles size={13} />
-            <span>ENTERPRISE AI FUNNEL SYSTEMS</span>
+            <span>AI REVENUE RECOVERY LAYER</span>
           </div>
 
-          <h1 style={{ fontSize: '24px', fontWeight: 700, margin: '10px 0 6px', color: '#1e1b4b' }}>
-            Choose Portal & Sign In
-          </h1>
-          <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '20px' }}>
-            Two completely separated platforms: <strong>Agency Back Office</strong> for DFY setup, and <strong>Client Portal</strong> for Real Estate Brokerage.
+          <h1>Capture Every Enquiry. Recover Every No-Show.</h1>
+          <p className="showcase-lead-p">
+            Buildicy captures every enquiry, responds in seconds, qualifies the prospect, routes them to the right agent, books the site visit, follows up automatically, recovers no-shows, and syncs everything directly to your existing CRM.
           </p>
 
-          {notice && (
-            <div className="toast" style={{ marginBottom: '16px', background: '#ecfdf5', borderColor: '#a7f3d0', color: '#065f46' }}>
-              <Check size={16} /> {notice}
-            </div>
-          )}
-
-          {errorMessage && (
-            <div className="toast" style={{ marginBottom: '16px', background: '#fef2f2', borderColor: '#fecaca', color: '#991b1b' }}>
-              <AlertCircle size={16} /> {errorMessage}
-            </div>
-          )}
-
-          {/* Dedicated Login Option Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px', marginBottom: '22px' }}>
-            {/* Card 1: Agency Back Office */}
-            <div
-              className="persona-card admin"
-              onClick={fillAdmin}
-              style={{
-                cursor: 'pointer',
-                border: '1.5px solid #e9d5ff',
-                borderRadius: '12px',
-                padding: '14px 16px',
-                background: '#faf5ff',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '14px',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <div style={{
-                width: '42px',
-                height: '42px',
-                borderRadius: '10px',
-                background: '#9333ea',
-                color: '#fff',
-                display: 'grid',
-                placeItems: 'center',
-                flexShrink: 0
-              }}>
-                <Building2 size={22} />
+          <div className="showcase-features-stack">
+            <div className="feature-item">
+              <div className="feat-icon-box green">
+                <Zap size={18} />
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
-                  <strong style={{ fontSize: '14px', color: '#581c87' }}>1. Agency Back Office (/admin)</strong>
-                  <span style={{ fontSize: '10px', background: '#f3e8ff', color: '#7e22ce', padding: '2px 8px', borderRadius: '12px', fontWeight: 600 }}>
-                    Agency SuperAdmin
-                  </span>
-                </div>
-                <div style={{ fontSize: '12px', color: '#6b21a8' }}>
-                  Workspaces, DFY Funnels, Knowledge & Client Ticket Queue
-                </div>
-                <div style={{ fontSize: '11px', color: '#7e22ce', fontFamily: 'monospace', marginTop: '3px' }}>
-                  admin@buildicy.com · Password123!
-                </div>
+              <div>
+                <strong>Respond in Under 60 Seconds</strong>
+                <p>Instant WhatsApp & multi-channel response before prospects abandon your listings or go to competitors.</p>
               </div>
-              <ArrowRight size={18} style={{ color: '#9333ea' }} />
             </div>
 
-            {/* Card 2: Client Portal */}
-            <div
-              className="persona-card client"
-              onClick={fillClient}
-              style={{
-                cursor: 'pointer',
-                border: '1.5px solid #bfdbfe',
-                borderRadius: '12px',
-                padding: '14px 16px',
-                background: '#eff6ff',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '14px',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <div style={{
-                width: '42px',
-                height: '42px',
-                borderRadius: '10px',
-                background: '#2563eb',
-                color: '#fff',
-                display: 'grid',
-                placeItems: 'center',
-                flexShrink: 0
-              }}>
-                <UserCheck size={22} />
+            <div className="feature-item">
+              <div className="feat-icon-box purple">
+                <Sparkles size={18} />
               </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2px' }}>
-                  <strong style={{ fontSize: '14px', color: '#1e3a8a' }}>2. Client Portal (/)</strong>
-                  <span style={{ fontSize: '10px', background: '#dbeafe', color: '#1d4ed8', padding: '2px 8px', borderRadius: '12px', fontWeight: 600 }}>
-                    Prestige Luxury Realty
-                  </span>
-                </div>
-                <div style={{ fontSize: '12px', color: '#1e40af' }}>
-                  Spectator Dashboard, Real Estate Leads, WhatsApp AI & n8n Engine
-                </div>
-                <div style={{ fontSize: '11px', color: '#1d4ed8', fontFamily: 'monospace', marginTop: '3px' }}>
-                  client@prestigerealty.com · Password123!
-                </div>
+              <div>
+                <strong>Qualify Before Agents Waste Time</strong>
+                <p>Configurable discovery for verified budget, purchasing timeline, location fit, and financing readiness.</p>
               </div>
-              <ArrowRight size={18} style={{ color: '#2563eb' }} />
+            </div>
+
+            <div className="feature-item">
+              <div className="feat-icon-box blue">
+                <Building2 size={18} />
+              </div>
+              <div>
+                <strong>Automated No-Show Recovery</strong>
+                <p>Salvages 75%+ of missed appointments with instant multi-channel reschedule flows and closer alerts.</p>
+              </div>
             </div>
           </div>
 
-          <div className="auth-divider" style={{ margin: '18px 0' }}>
-            <span>OR LOGIN WITH CUSTOM CREDENTIALS</span>
-          </div>
-
-          {/* Custom Credentials Form */}
-          <form
-            onSubmit={e => {
-              e.preventDefault()
-              handleSignIn(email, password)
-            }}
-          >
-            <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155' }}>
-              Work Email
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="admin@buildicy.com or client@prestigerealty.com"
-                style={{ height: '42px', fontSize: '13px', marginTop: '6px' }}
-              />
-            </label>
-
-            <label style={{ fontSize: '12px', fontWeight: 600, color: '#334155', marginTop: '12px' }}>
-              Password
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••••••"
-                style={{ height: '42px', fontSize: '13px', marginTop: '6px' }}
-              />
-            </label>
-
-            <button
-              type="submit"
-              className="primary-button auth-submit"
-              disabled={busy}
-              style={{
-                height: '44px',
-                fontSize: '14px',
-                marginTop: '16px',
-                background: '#4f46e5',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px'
-              }}
-            >
-              {busy ? (
-                <>
-                  <LoaderCircle className="spin" size={16} /> Authenticating...
-                </>
-              ) : (
-                <>
-                  <KeyRound size={16} /> Sign In to Workspace <ArrowRight size={15} />
-                </>
-              )}
-            </button>
-          </form>
-
-          <div className="auth-security-note" style={{ marginTop: '20px', color: '#64748b', fontSize: '11px' }}>
-            <ShieldCheck size={14} style={{ color: '#10b981' }} />
-            <span>Connected to Supabase with isolated multi-tenant schemas & credentials</span>
+          <div className="showcase-trust-bar">
+            <div className="trust-stat">
+              <strong>$23.5M</strong>
+              <small>Recovered Pipeline</small>
+            </div>
+            <div className="trust-sep" />
+            <div className="trust-stat">
+              <strong>&lt; 60s</strong>
+              <small>Speed to Lead SLA</small>
+            </div>
+            <div className="trust-sep" />
+            <div className="trust-stat">
+              <strong>38.4%</strong>
+              <small>Conversion Lift</small>
+            </div>
           </div>
         </section>
-      </div>
+
+        {/* Right Column: High-End Sign-In Card */}
+        <section className="login-card-column">
+          <div className="enterprise-login-card">
+            <div className="card-header-block">
+              <span className="auth-step-pill">UNIFIED LOGIN GATEWAY</span>
+              <h2>Choose Portal & Sign In</h2>
+              <p>Select your persona for 1-click instant access, or enter your credentials below.</p>
+            </div>
+
+            {notice && (
+              <div className="login-toast success">
+                <Check size={16} />
+                <span>{notice}</span>
+              </div>
+            )}
+
+            {errorMessage && (
+              <div className="login-toast error">
+                <AlertCircle size={16} />
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
+            {/* Quick 1-Click Persona Cards */}
+            <div className="persona-selection-grid">
+              {/* Card 1: Agency Back Office */}
+              <div
+                className="persona-action-card admin"
+                onClick={fillAdmin}
+                role="button"
+                tabIndex={0}
+              >
+                <div className="persona-avatar-box admin">
+                  <Building2 size={20} />
+                </div>
+                <div className="persona-details-col">
+                  <div className="persona-head-row">
+                    <strong>1. Agency Back Office (/admin)</strong>
+                    <span className="persona-role-tag admin">SuperAdmin</span>
+                  </div>
+                  <span className="persona-desc-line">Workspaces, Outcome-Based Packages, AI Brain & Tickets</span>
+                  <code className="persona-cred-code">admin@buildicy.com • Password123!</code>
+                </div>
+                <ArrowRight size={16} className="persona-arrow-icon" />
+              </div>
+
+              {/* Card 2: Client Portal */}
+              <div
+                className="persona-action-card client"
+                onClick={fillClient}
+                role="button"
+                tabIndex={0}
+              >
+                <div className="persona-avatar-box client">
+                  <UserCheck size={20} />
+                </div>
+                <div className="persona-details-col">
+                  <div className="persona-head-row">
+                    <strong>2. Client Portal (/)</strong>
+                    <span className="persona-role-tag client">Prestige Realty</span>
+                  </div>
+                  <span className="persona-desc-line">Real-Time Lead Recovery, Live WhatsApp Chats & Site Visits</span>
+                  <code className="persona-cred-code">client@prestigerealty.com • Password123!</code>
+                </div>
+                <ArrowRight size={16} className="persona-arrow-icon" />
+              </div>
+            </div>
+
+            <div className="login-divider-row">
+              <span>OR ENTER CUSTOM CREDENTIALS</span>
+            </div>
+
+            {/* Custom Credentials Form */}
+            <form
+              className="login-form-block"
+              onSubmit={e => {
+                e.preventDefault()
+                handleSignIn(email, password)
+              }}
+            >
+              <div className="form-field-group">
+                <label>Work Email Address</label>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="admin@buildicy.com or client@prestigerealty.com"
+                />
+              </div>
+
+              <div className="form-field-group">
+                <label>Password</label>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="login-submit-button"
+                disabled={busy}
+              >
+                {busy ? (
+                  <>
+                    <LoaderCircle className="spin-icon" size={16} />
+                    <span>Signing In...</span>
+                  </>
+                ) : (
+                  <>
+                    <KeyRound size={16} />
+                    <span>Sign In to Platform</span>
+                    <ArrowRight size={15} />
+                  </>
+                )}
+              </button>
+            </form>
+
+            <div className="login-security-footer">
+              <ShieldCheck size={14} className="text-emerald" />
+              <span>Multi-tenant schema isolation with Supabase RLS & Meta Cloud API webhooks</span>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   )
 }

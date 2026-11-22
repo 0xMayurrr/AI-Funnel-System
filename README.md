@@ -45,7 +45,7 @@ Most business owners (real estate brokers, dentists, consultants) **have zero te
 │ • Multi-Tenant Client Workspaces  │             │ • Spectator KPI Cards & Trends    │
 │ • DFY Funnel Builder & Publisher  │             │ • Real Estate Leads CRM           │
 │ • Client Change Request Queue     │             │ • Live WhatsApp AI Chat Simulator │
-│ • Business Knowledge Base & AI    │             │ • Visual n8n Automation Engine    │
+│ • Business Knowledge Base & AI    │             │ • Autonomous AI Lead Journey View │
 │ • Service Packages (Starter/Grow) │             │ • 1-Click "Request Change" Modal  │
 └───────────────────────────────────┘             └───────────────────────────────────┘
                   │                                                 │
@@ -87,10 +87,11 @@ The application features dedicated logins and isolated accounts:
 - **Lead Alert Strip**: Highlights top active leads with avatars and 1-click WhatsApp outreach.
 - **Revenue Trend Bar Chart**: Visualizes monthly earnings and pipeline growth.
 - **Top Acquisition Sources Donut**: Breakdown of leads by channel (Organic Search, Meta/Instagram Ads, WhatsApp, Direct).
-- **Visual n8n-Style Workflow Engine**: Interactive node canvas displaying:
-  1. Trigger (`Form Submission` / `Meta Ad Click`)
-  2. Action (`WhatsApp Instant Hello`)
-  3. AI Brain (`OpenAI GPT-4o Qualification`)
+- **Autonomous AI Lead Journey View**: Executive spectator pipeline displaying:
+  1. Intake (`Multi-Channel Lead Ingestion: Web Form / Meta Ads / WhatsApp`)
+  2. Concierge (`Instant 24/7 Greeting < 15s`)
+  3. AI Brain (`OpenAI GPT-4o Criteria & High-Ticket Qualification`)
+  4. Conversion (`VIP Tour Booking & Senior Broker Handoff`)
   4. Condition Router (`Budget >= $1M?`)
   5. Calendar Link (`Cal.com / Calendly Dispatch`)
 
